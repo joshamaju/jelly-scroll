@@ -17,10 +17,12 @@ for (let i = 0; i < count; i++) {
   container.appendChild(item);
 }
 
+console.log(document.activeElement)
+
 const scroll = useScroll({
-  onScroll: ({ v }) => {
+  onScroll: ({ v, y }) => {
     physics({
-      to: lerp(v),
+      to: y > 0 ? lerp(v) : 0,
       friction: 0.6,
       restSpeed: false,
       from: valueY.get(),
@@ -28,4 +30,14 @@ const scroll = useScroll({
       velocity: valueY.getVelocity(),
     }).start(valueY);
   },
+  onScrollEnd: () => {
+    physics({
+      to: 0,
+      friction: 0.6,
+      restSpeed: false,
+      from: valueY.get(),
+      springStrength: 100,
+      velocity: valueY.getVelocity(),
+    }).start(valueY);
+  }
 });
